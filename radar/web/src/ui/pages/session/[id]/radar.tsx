@@ -163,7 +163,8 @@ const MapContainer = React.memo(() => {
                             flexDirection: "row",
                             flexWrap: "wrap",
 
-                            justifyContent: "center"
+                            justifyContent: "center",
+                            alignSelf: "center",
                         }}>
                             {map.verticalSections.map(section => (
                                 <SquareContainer squareSize={squareSize} key={section.name}>
@@ -175,7 +176,7 @@ const MapContainer = React.memo(() => {
                 } else {
                     const minAxis = Math.min(size.width, size.height);
                     return (
-                        <SquareContainer squareSize={minAxis} >
+                        <SquareContainer squareSize={minAxis} sx={{ alignSelf: "center" }} >
                             <MapLevel level={localMapLevel} />
                         </SquareContainer>
                     );
