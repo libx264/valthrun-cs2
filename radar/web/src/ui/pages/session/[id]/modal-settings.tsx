@@ -12,10 +12,12 @@ import {
     Typography,
     MenuItem,
     FormControl,
-    Select
+    Select,
+    Tabs,
+    Tab
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../state";
 import { kDefaultRadarSettings, RadarSettingsState, updateRadarSettings } from "../../../../state/radar-settings";
 
@@ -23,32 +25,50 @@ export default React.memo(() => {
     const isOpen = useAppSelector((state) => state.radarSettings.dialogOpen);
     const dispatch = useAppDispatch();
     const highlightBroadcaster = useAppSelector((state) => state.radarSettings.showDotOwn);
+    const [currentTab, setCurrentTab] = useState(0);
 
     return (
         <Dialog open={isOpen} onClose={() => dispatch(updateRadarSettings({ dialogOpen: false }))}>
-            <DialogTitle>Radar Settings</DialogTitle>
+            <DialogTitle>Settings</DialogTitle>
             <DialogContent
                 sx={{
                     minWidth: "15em",
-                    width: "25em",
+                    width: "30em",
 
                     minHeight: "10em",
+                    height: "30em",
+
                     overflow: "auto",
                 }}
             >
-                <SettingStyleSelector />
+                <Box sx={{ borderBottom: 1, borderColor: 'divider', width: "100%" }}>
+                    <Tabs value={currentTab} onChange={(_event, value) => setCurrentTab(value)}>
+                        <Tab label="Page Settings" />
+                        <Tab label="Radar Visuals" />
+                        <Tab label="Colors" />
+                    </Tabs>
+                </Box>
 
-                <SettingIconSize />
+                <TabPanel index={0} value={currentTab}>
+                    <SettingBoolean target="disablePadding" title="Disable page padding" />
+                    <SettingBoolean target="hideMapTitle" title="Hide map title" />
+                </TabPanel>
 
-                <SettingBoolean target="displayBombDetails" title="Display Bomb Details" />
-                <SettingBoolean target="showAllLayers" title="Display all levels" />
-                <SettingBoolean target="showDotOwn" title="Highlight broadacster" />
-                <SettingBoolean target="disablePadding" title="Disable page padding" />
-                <SettingBoolean target="hideMapTitle" title="Hide map title" />
+                <TabPanel index={1} value={currentTab}>
+                    <SettingStyleSelector />
+                    <SettingIconSize />
 
-                <SettingDotColor target="colorDotCT" title="CT Color" />
-                <SettingDotColor target="colorDotT" title="T Color" />
-                {highlightBroadcaster && <SettingDotColor target="colorDotOwn" title="Own Color" />}
+                    <SettingBoolean target="displayBombDetails" title="Display Bomb Details" />
+                    <SettingBoolean target="showAllLayers" title="Display all levels" />
+                    <SettingBoolean target="showDotOwn" title="Highlight broadacster" />
+                </TabPanel>
+
+                <TabPanel index={2} value={currentTab}>
+                    <SettingDotColor target="colorDotCT" title="CT Color" />
+                    <SettingDotColor target="colorDotT" title="T Color" />
+                    {highlightBroadcaster && <SettingDotColor target="colorDotOwn" title="Own Color" />}
+                </TabPanel>
+
             </DialogContent>
             <DialogActions>
                 <Button onClick={() => dispatch(updateRadarSettings({ dialogOpen: false }))}>Close</Button>
@@ -56,6 +76,20 @@ export default React.memo(() => {
         </Dialog>
     );
 });
+
+const TabPanel = (props: {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}) => {
+    const { children, value, index } = props;
+
+    return (
+        <Box role="tabpanel" sx={{ p: 1, display: value == index ? "flex" : "none", flexDirection: "column", gap: 1 }}>
+            {value === index && children}
+        </ Box>
+    );
+}
 
 const SettingIconSize = React.memo(() => {
     const value = useAppSelector((state) => state.radarSettings.iconSize);
@@ -153,7 +187,7 @@ const SettingStyleSelector = React.memo(() => {
 
     return (
         <Box>
-            <Typography variant={"subtitle1"}>Radar Style</Typography>
+            <Typography variant={"subtitle1"}>Map Style</Typography>
             <FormControl fullWidth>
                 <Select
                     value={value}
