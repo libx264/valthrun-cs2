@@ -11,27 +11,34 @@ import ModalSettings from "./modal-settings";
 import { ContextRadarState, RadarRenderer } from "./radar";
 
 const kServerUrl: string | null = process.env.SERVER_URL;
+const getEndpointUrl = () => {
+    if (typeof kServerUrl === "string") {
+        return kServerUrl;
+    }
+
+    const urlSearch = new URLSearchParams(location.search ?? "");
+    if (urlSearch.has("endpoint")) {
+        return urlSearch.get("endpoint");
+    }
+
+    const parts = [];
+    if (location.protocol === "https:") {
+        parts.push("wss://");
+    } else {
+        parts.push("ws://");
+    }
+    parts.push(location.hostname);
+    if (location.port) {
+        parts.push(`:${location.port}`);
+    }
+    parts.push("/subscribe");
+
+    return parts.join("");
+}
+
 export default React.memo(() => {
     const dispatch = useAppDispatch();
-    const targetUrl = React.useMemo(() => {
-        if (typeof kServerUrl === "string") {
-            return kServerUrl;
-        }
-
-        const parts = [];
-        if (location.protocol === "https:") {
-            parts.push("wss://");
-        } else {
-            parts.push("ws://");
-        }
-        parts.push(location.hostname);
-        if (location.port) {
-            parts.push(`:${location.port}`);
-        }
-        parts.push("/subscribe");
-
-        return parts.join("");
-    }, []);
+    const targetUrl = React.useMemo(getEndpointUrl, []);
 
     return (
         <Box
