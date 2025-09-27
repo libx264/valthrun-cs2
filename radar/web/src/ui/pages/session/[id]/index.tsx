@@ -8,7 +8,7 @@ import { useAppDispatch } from "../../../../state";
 import { updateRadarSettings } from "../../../../state/radar-settings";
 import { SubscriberClientProvider, useSubscriberClient } from "../../../components/connection";
 import ModalSettings from "./modal-settings";
-import { ContextRadarState, RadarRenderer } from "./radar";
+import { RadarRenderer } from "./radar";
 import { useDocumentFocusState } from "../../../components/container/document-focus-state";
 
 const kServerUrl: string | null = process.env.SERVER_URL;
@@ -151,9 +151,6 @@ const ClientStateDisconnected = React.memo(() => {
 const ClientStateConnected = React.memo(() => {
     const client = useSubscriberClient();
     const state = useSubscriberClientState();
-    const [radarState, setRadarState] = React.useState<RadarState>(kDefaultRadarState);
-
-    React.useEffect(() => client.events.on("radar.state", (update) => setRadarState(update)), [client]);
 
     if (state.state !== "connected") {
         return;
@@ -170,9 +167,7 @@ const ClientStateConnected = React.memo(() => {
                 justifyContent: "center",
             }}
         >
-            <ContextRadarState.Provider value={radarState}>
-                <RadarRenderer />
-            </ContextRadarState.Provider>
+            <RadarRenderer />
         </Box>
     );
 });
