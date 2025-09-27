@@ -10,7 +10,6 @@ import {
     Slider,
     Switch,
     Typography,
-    InputLabel,
     MenuItem,
     FormControl,
     Select
@@ -44,6 +43,7 @@ export default React.memo(() => {
                 <SettingBoolean target="displayBombDetails" title="Display Bomb Details" />
                 <SettingBoolean target="showAllLayers" title="Display all levels" />
                 <SettingBoolean target="showDotOwn" title="Highlight broadacster" />
+                <SettingBoolean target="disablePadding" title="Disable page padding" />
 
                 <SettingDotColor target="colorDotCT" title="CT Color" />
                 <SettingDotColor target="colorDotT" title="T Color" />
@@ -77,7 +77,7 @@ const SettingIconSize = React.memo(() => {
 
 const SettingBoolean = React.memo((props: {
     title: string,
-    target: keyof RadarSettingsState & ("displayBombDetails" | "showDotOwn" | "showAllLayers")
+    target: keyof RadarSettingsState & ("displayBombDetails" | "showDotOwn" | "showAllLayers" | "disablePadding")
 }) => {
     const { target, title } = props;
     const value = useAppSelector(state => state.radarSettings[target]);

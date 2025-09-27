@@ -14,6 +14,8 @@ export type RadarSettingsState = {
     colorDotT: string;
     colorDotOwn: string;
     showDotOwn: boolean;
+
+    disablePadding: boolean;
 };
 
 export const kDefaultRadarSettings: RadarSettingsState = {
@@ -28,6 +30,7 @@ export const kDefaultRadarSettings: RadarSettingsState = {
     colorDotOwn: "#e91e63",
 
     showDotOwn: true,
+    disablePadding: false
 };
 const slice = createSlice({
     name: "radar-settings",

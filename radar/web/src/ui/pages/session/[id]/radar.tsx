@@ -29,6 +29,7 @@ export const RadarRenderer = React.memo(() => {
     });
 
     const displayBombDetails = useAppSelector(state => state.radarSettings.displayBombDetails);
+    const padding = useAppSelector(state => state.radarSettings.disablePadding ? 0 : 3);
 
     return (
         <ContextMap.Provider value={queryMap.data ?? null}>
@@ -40,7 +41,7 @@ export const RadarRenderer = React.memo(() => {
                     display: "flex",
                     flexDirection: "column",
 
-                    p: 3,
+                    p: padding,
                 }}
             >
                 <Typography variant={"h5"}>{queryMap.data?.displayName ?? worldName}</Typography>
