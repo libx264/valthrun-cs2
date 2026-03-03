@@ -222,9 +222,9 @@ jobs:
               run: chmod +x .github/workflows/artifact_upload.sh
 
             - uses: actions/upload-artifact@v4
-              name: Upload radar server
+              name: Upload radar client
               with:
-                  name: radar-server-linux
+                  name: radar-client-linux
                   path: target/release/radar-client-standalone
 
     build-overlay:
@@ -313,6 +313,7 @@ jobs:
     #       if: ${{ github.event_name != 'pull_request' }}
     #       env:
     #         ARTIFACT_API_KEY: ${{ secrets.ARTIFACT_API_KEY }}
+
 
 
 
