@@ -61,18 +61,17 @@ jobs:
         needs: [rust-check]
         strategy:
             matrix:
-                build: [linux]
+                build: [linux, windows]
                 include:
                     - build: linux
                       os: ubuntu-22.04
                       target: radar-server-standalone
-                      # https://github.com/clap-rs/clap/issues/1938#issuecomment-632186396
                       flags: ""
-
-                    # - build: windows
-                    #   os: windows-latest
-                    #   target: radar-server-standalone.exe
-                    #   flags: -Ctarget-feature=+crt-static
+                      
+                    - build: windows
+                      os: windows-latest
+                      target: radar-server-standalone.exe
+                      flags: -Ctarget-feature=+crt-static
 
         runs-on: ${{ matrix.os }}
         steps:
@@ -180,12 +179,11 @@ jobs:
               env:
                   RUSTFLAGS: -Ctarget-feature=+crt-static
 
-            - name: Upload release build to portal
-              shell: bash
-              run: .github/workflows/artifact_upload.sh cs2-radar-client target/release/radar-client-standalone.exe target/release/radar_client_standalone.pdb
-              if: ${{ github.event_name != 'pull_request' }}
-              env:
-                  ARTIFACT_API_KEY: ${{ secrets.ARTIFACT_API_KEY }}
+            - uses: actions/upload-artifact@v4
+              name: Upload radar client
+              with:
+                  name: radar-client-windows
+                  path: target/release/radar-client-standalone.exe
 
     build-radar-client-lin:
         name: Radar Client (Linux)
@@ -223,12 +221,11 @@ jobs:
             - name: chmod upload script
               run: chmod +x .github/workflows/artifact_upload.sh
 
-            - name: Upload release build to portal
-              shell: bash
-              run: .github/workflows/artifact_upload.sh cs2-radar-client target/release/radar-client-standalone
-              if: ${{ github.event_name != 'pull_request' }}
-              env:
-                  ARTIFACT_API_KEY: ${{ secrets.ARTIFACT_API_KEY }}
+            - uses: actions/upload-artifact@v4
+              name: Upload radar server
+              with:
+                  name: radar-server-linux
+                  path: target/release/radar-client-standalone
 
     build-overlay:
         name: CS2 Overlay
@@ -266,12 +263,11 @@ jobs:
             # - name: Run tests
             #   run: cargo test --verbose
 
-            - name: Upload release build to portal
-              shell: bash
-              run: .github/workflows/artifact_upload.sh cs2-overlay target/release/controller.exe target/release/controller.pdb
-              if: ${{ github.event_name != 'pull_request' }}
-              env:
-                  ARTIFACT_API_KEY: ${{ secrets.ARTIFACT_API_KEY }}
+            - uses: actions/upload-artifact@v4
+              name: Upload radar server
+              with:
+                  name: cs2-overlay
+                  path: target/release/controller.exe
 
     # build-schema-dump:
     #   name: CS2 Schema Dumper
@@ -317,4 +313,5 @@ jobs:
     #       if: ${{ github.event_name != 'pull_request' }}
     #       env:
     #         ARTIFACT_API_KEY: ${{ secrets.ARTIFACT_API_KEY }}
+
 
