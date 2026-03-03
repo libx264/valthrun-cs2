@@ -264,7 +264,7 @@ jobs:
             #   run: cargo test --verbose
 
             - uses: actions/upload-artifact@v4
-              name: Upload radar server
+              name: Upload overlay
               with:
                   name: cs2-overlay
                   path: target/release/controller.exe
@@ -313,5 +313,6 @@ jobs:
     #       if: ${{ github.event_name != 'pull_request' }}
     #       env:
     #         ARTIFACT_API_KEY: ${{ secrets.ARTIFACT_API_KEY }}
+
 
 
